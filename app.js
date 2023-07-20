@@ -23,23 +23,6 @@ const question = [
     }
 ]
 
-const addEmployeeQuestions = [
-    {
-        type: 'list',
-        message: 'What do you wanna inquire about now?',
-        name: 'request',
-        choices: [
-            "View all Employees",
-            "Add Employee",
-            "Update Employee",
-            "View All Roles",
-            "Add Role",
-            "View All Departments",
-            "Add Departments",
-            "Quit"]
-    }
-]
-
 const addNewDepartment = [
     {
         type: 'input',
@@ -91,6 +74,35 @@ const addNewEmployee = [
     }
 ]
 
+const updateEmployee =  [
+    {
+        type: 'input',
+        message: 'What Employee by ID do you want to update',
+        name: 'employee_id' 
+    },
+    {
+        type: 'input',
+        message: 'What is the UPDATE employee First name?',
+        name: 'first_name' 
+    },
+    {
+        type: 'input',
+        message: 'What is the UPDATE employee last name?',
+        name: 'last_name' 
+    },
+    {
+        type: 'input',
+        message: 'What is the UPDATE employee role id?',
+        name: 'role_id' 
+    },
+    {
+        type: 'input',
+        message: 'What is the UPDATE employee Manger Id if any?',
+        name: 'manager_id',
+        default: 'NULL'
+    }
+]
+
 
 async function ask() {
     const askedQuestion = await prompt(question)
@@ -103,15 +115,15 @@ async function ask() {
         }
     )
     if (askedQuestion.request === 'Quit') {
-        console.log("See you next time!");
-        db.end()
-        return;
+        console.log("See you next time!");        
+        return db.end();
     }
 
     if (askedQuestion.request === "View all Employees" || askedQuestion.request === "View All Departments" || askedQuestion.request === "View All Roles") {
         const queryString = sqlQuery(askedQuestion.request)
         const answer = await db.query(queryString)
         console.table(answer[0]);
+        db.end()
         return ask()
     }
     if (askedQuestion.request === "Add Employee") {
@@ -122,7 +134,7 @@ async function ask() {
         const answer = await db.query(string)
         const {insertId} = answer[0]
         console.log(`Add employee to id ${insertId}:${askedQuestion.first_name} ${askedQuestion.last_name}`);
-
+        db.end()
         return ask()
     }
     if (askedQuestion.request === "Add Departments") {
@@ -130,6 +142,7 @@ async function ask() {
         const answer = await db.query(`INSERT INTO department (department_name) VALUES (?)`, departmentName.request)
         const {insertId} = answer[0]
         console.log(`Department Add to id ${insertId}:${departmentName.request}`);
+        db.end()
         return ask()
     }
     if (askedQuestion.request === "Add Role") {
@@ -137,6 +150,21 @@ async function ask() {
         const answer = await db.query(`INSERT INTO roles (title, salary,department_id) VALUES ("${data.title}", ${data.salary}, ${data.department_id})`)
         const {insertId} = answer[0]
         console.log(`Role Add to id ${insertId}:${data.title}`);
+        db.end()
+        return ask()
+    }
+
+    if (askedQuestion.request === "Update Employee") {
+        const data = await prompt(updateEmployee)
+
+        const {employee_id, first_name, last_name, role_id, manager_id} = data
+
+        const roleAnswer = await db.query(`UPDATE employee SET first_name = "${first_name}", last_name = "${last_name}" , role_id = ${role_id}, manager_id = ${manager_id} WHERE employee_id = ${employee_id}`)
+        
+        const answer = await db.query(sqlQuery("View all Employees"))
+
+        console.table(answer[0]);
+        db.end()
         return ask()
     }
     

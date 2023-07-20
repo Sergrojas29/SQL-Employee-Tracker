@@ -30,4 +30,7 @@
 -- INSERT INTO department (department_name) VALUES ("New Department Test");
 
 -- INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("Se", "Ro", 3, NULL)
-INSERT INTO roles (title, salary,department_id) VALUES ("CoolCat", 90000.00, 7);
+-- INSERT INTO roles (title, salary,department_id) VALUES ("CoolCat", 90000.00, 7);
+SELECT * FROM employee;
+UPDATE employee SET first_name = "NewThing", last_name = "NewLast" , role_id = 6, manager_id = 3 WHERE employee_id = 1 ;
+SELECT * FROM employee;
