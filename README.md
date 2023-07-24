@@ -38,6 +38,10 @@ Install MySQL and run schema and seed. Then run node app on console of you choic
 
     
 
+https://github.com/Sergrojas29/SQL-Employee-Tracker/assets/128770839/e134617f-e7bc-4dcc-96f2-a6a5a2f21876
+
+
+
     
 ## Questions
 
