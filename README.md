@@ -1,4 +1,56 @@
-# 12 SQL: Employee Tracker
+# SQL Employee Tracker
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+
+A local run command line application to track company departments, roles and employee. 
+
+
+#Table of Contents
+
+1. [Authors](#authors)
+
+2. [Usage/Examples](#usageexamples)
+    
+3. [Installation](#installation)
+    
+4. [Demo](#demo)
+    
+7. [Questions](#questions)
+    
+8. [License](#License)
+
+
+## Authors
+    - [@Sergrojas29](https://www.github.com/Sergrojas29)
+    
+## Usage/Examples
+
+Run NODE app and read promts on command line and choice your task. Input info that was asked for on the command prompt.
+
+
+## Installation
+Locally run wit MySQL and run schema and seed with company info 
+
+Install MySQL and run schema and seed. Then run node app on console of you choice 
+
+    
+## Demo
+
+    
+
+    
+## Questions
+
+Contact me : 
+Github: Sergrojas29
+Email: Sergrojas29@gmail.com
+    
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+
 
 ## Your Task
 

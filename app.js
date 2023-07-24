@@ -27,7 +27,7 @@ const addNewDepartment = [
     {
         type: 'input',
         message: 'What is the name of the New Department?',
-        name: 'request' 
+        name: 'request'
     }
 ]
 
@@ -35,36 +35,36 @@ const addNewRole = [
     {
         type: 'input',
         message: 'What is the title of the New Role?',
-        name: 'title' 
+        name: 'title'
     },
     {
         type: 'input',
         message: 'What is the salary (ie. 60000.00) of the New Role?',
-        name: 'salary' 
+        name: 'salary'
     },
     {
         type: 'input',
         message: 'What is the department id of the New Role?',
-        name: 'department_id' 
+        name: 'department_id'
     }
-    
+
 ]
 
 const addNewEmployee = [
     {
         type: 'input',
         message: 'What is the Employee first name?',
-        name: 'first_name' 
+        name: 'first_name'
     },
     {
         type: 'input',
         message: 'What is the Employee last name?',
-        name: 'last_name' 
+        name: 'last_name'
     },
     {
         type: 'input',
         message: 'What is the Employee role id?',
-        name: 'role_id' 
+        name: 'role_id'
     },
     {
         type: 'input',
@@ -74,26 +74,26 @@ const addNewEmployee = [
     }
 ]
 
-const updateEmployee =  [
+const updateEmployee = [
     {
         type: 'input',
         message: 'What Employee by ID do you want to update',
-        name: 'employee_id' 
+        name: 'employee_id'
     },
     {
         type: 'input',
         message: 'What is the UPDATE employee First name?',
-        name: 'first_name' 
+        name: 'first_name'
     },
     {
         type: 'input',
         message: 'What is the UPDATE employee last name?',
-        name: 'last_name' 
+        name: 'last_name'
     },
     {
         type: 'input',
         message: 'What is the UPDATE employee role id?',
-        name: 'role_id' 
+        name: 'role_id'
     },
     {
         type: 'input',
@@ -102,6 +102,39 @@ const updateEmployee =  [
         default: 'NULL'
     }
 ]
+
+//! unused Function
+async function get() {
+    const db = await mysql.createConnection(
+        {
+            host: 'localhost',
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        }
+    )
+
+    const getDepartments = await db.query("SELECT department_name FROM department")
+    let departValues = []
+    getDepartments[0].forEach(element => {
+        const data = Object.values(element)
+        departValues.push(...data)
+    });
+
+    questionDepartment = [
+        {
+            type: 'list',
+            message: 'What Department is this employee in?',
+            name: 'request',
+            choices: departValues
+        }
+    ]
+    const askedQuestion = await prompt(questionDepartment)
+    const id = departValues.indexOf(askedQuestion.request)+1
+    db.end()
+    return id
+}
+//! unused Function
 
 
 async function ask() {
@@ -115,7 +148,7 @@ async function ask() {
         }
     )
     if (askedQuestion.request === 'Quit') {
-        console.log("See you next time!");        
+        console.log("See you next time!");
         return db.end();
     }
 
@@ -132,7 +165,7 @@ async function ask() {
         const string = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${askedQuestion.first_name}", "${askedQuestion.last_name}", ${askedQuestion.role_id}, ${askedQuestion.manager_id})`
 
         const answer = await db.query(string)
-        const {insertId} = answer[0]
+        const { insertId } = answer[0]
         console.log(`Add employee to id ${insertId}:${askedQuestion.first_name} ${askedQuestion.last_name}`);
         db.end()
         return ask()
@@ -140,7 +173,7 @@ async function ask() {
     if (askedQuestion.request === "Add Departments") {
         const departmentName = await prompt(addNewDepartment)
         const answer = await db.query(`INSERT INTO department (department_name) VALUES (?)`, departmentName.request)
-        const {insertId} = answer[0]
+        const { insertId } = answer[0]
         console.log(`Department Add to id ${insertId}:${departmentName.request}`);
         db.end()
         return ask()
@@ -148,7 +181,7 @@ async function ask() {
     if (askedQuestion.request === "Add Role") {
         const data = await prompt(addNewRole)
         const answer = await db.query(`INSERT INTO roles (title, salary,department_id) VALUES ("${data.title}", ${data.salary}, ${data.department_id})`)
-        const {insertId} = answer[0]
+        const { insertId } = answer[0]
         console.log(`Role Add to id ${insertId}:${data.title}`);
         db.end()
         return ask()
@@ -157,17 +190,17 @@ async function ask() {
     if (askedQuestion.request === "Update Employee") {
         const data = await prompt(updateEmployee)
 
-        const {employee_id, first_name, last_name, role_id, manager_id} = data
+        const { employee_id, first_name, last_name, role_id, manager_id } = data
 
         const roleAnswer = await db.query(`UPDATE employee SET first_name = "${first_name}", last_name = "${last_name}" , role_id = ${role_id}, manager_id = ${manager_id} WHERE employee_id = ${employee_id}`)
-        
+
         const answer = await db.query(sqlQuery("View all Employees"))
 
         console.table(answer[0]);
         db.end()
         return ask()
     }
-    
+
 
 }
 
